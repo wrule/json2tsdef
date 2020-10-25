@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div class="name">
-      <h1>JSON转TypeScript类型定义</h1>
+      <h1 class="title">JSON转TypeScript类型定义</h1>
     </div>
     <router-view/>
   </div>
@@ -29,5 +29,8 @@
 
 .name {
   padding: 20px;
+}
+.title {
+  margin-bottom: 0px;
 }
 </style>

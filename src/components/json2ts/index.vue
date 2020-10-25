@@ -3,7 +3,22 @@
   padding: 0px 20px;
 }
 .coderow {
+  margin-top: 4px;
+}
+.controw {
   margin-top: 10px;
+}
+.inline {
+  display: flex;
+  align-items: center;
+}
+.inline > span {
+  white-space: nowrap;
+  margin-right: 5px;
+}
+.copyicon {
+  margin-left: 4px;
+  cursor: pointer;
 }
 </style>
 
@@ -11,41 +26,57 @@
   <div class="com">
     <a-row :gutter="10">
       <a-col :span="12">
-        <!-- <a-textarea
-          v-model="jsonCode"
-          :rows="12"
-          placeholder="请在此输入JSON数据"
-        /> -->
-        <codemirror
-          v-model="jsonCode"
-          :options="jsonOptions"
-        />
+        <div>
+          <span>JSON数据</span>
+          <a-icon @click="handleCopyJSON" class="copyicon" type="copy" />
+        </div>
       </a-col>
       <a-col :span="12">
-        <!-- <a-textarea
-          v-model="tsCode"
-          :rows="12"
-          placeholder="类型定义"
-        /> -->
-        <codemirror
-          v-model="tsCode"
-          :options="tsOptions"
-        />
+        <div>
+          <span>TypeScript定义</span>
+          <a-icon @click="handleCopyTs" class="copyicon" type="copy" />
+        </div>
       </a-col>
     </a-row>
     <a-row class="coderow" :gutter="10">
+      <a-col :span="12">
+        <Code
+          :value="jsonCode"
+          @change="handleCodeChange"
+        />
+      </a-col>
+      <a-col :span="12">
+        <Code
+          :value="tsCode"
+        />
+      </a-col>
+    </a-row>
+    <a-row class="controw" :gutter="10">
       <a-col :span="6">
-        <a-input placeholder="请输入数据名称(如myclass)" v-model="desc" />
+        <div class="inline">
+          <span>数据名称: </span>
+          <a-input
+            placeholder="请输入JSON数据名称(如myclass)"
+            v-model="desc"
+            allowClear
+            @change="handleDescChange"
+          />
+        </div>
       </a-col>
       <a-col :span="6">
         <a-button
           type="primary"
+          :loading="loading"
           @click="handleGenClick">
           生成TypeScript定义
         </a-button>
       </a-col>
       <a-col :span="6">
-        <a-input placeholder="类型名称" v-model="tsName" />
+        <div class="inline">
+          <span>类型名称: </span>
+          <a-input placeholder="类型名称" v-model="tsName" />
+          <a-icon @click="handleCopyTsName" class="copyicon" type="copy" />
+        </div>
       </a-col>
     </a-row>
   </div>
@@ -54,20 +85,16 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import Shuji from '@wrule/shuji';
-import { codemirror } from 'vue-codemirror';
-// import 'codemirror/mode/javascript/javascript.js';
-// import 'codemirror/lib/codemirror.css';
-// import 'codemirror/theme/eclipse.css';
-import 'codemirror/lib/codemirror.css';
-import 'codemirror/mode/javascript/javascript.js';
+import Code from '@/components/code/index.vue';
 
 @Component({
   components: {
-    codemirror,
+    Code,
   },
 })
 export default class Home extends Vue {
   desc = 'myclass';
+
   jsonCode = `
 {
   "name": "jimao",
@@ -87,31 +114,76 @@ export default class Home extends Vue {
   "unknow": []
 }
 `.trim();
+
+  realJsonCode = this.jsonCode;
+
   tsName = '';
+
   tsCode = '';
 
-  handleGenClick() {
-    const shuji = new Shuji();
-    const struct = shuji.Infer(this.desc, JSON.parse(this.jsonCode));
-    this.tsName = struct.TsName;
-    this.tsCode = struct.TsCode;
+  loading = false;
+
+  shuji = new Shuji();
+
+  genCode(desc: string, json: string) {
+    this.loading = true;
+    this.$nextTick(() => {
+      try {
+        const struct = this.shuji.Infer(desc, JSON.parse(json));
+        this.tsName = struct.TsName;
+        this.tsCode = struct.TsTestCode;
+      } catch(e) {
+        console.log('转换出错');
+      }
+      this.loading = false;
+    });
   }
 
-  jsonOptions = {
-    tabSize: 4,
-    mode: 'text/javascript',
-    theme: 'eclipse',
-    lineNumbers: true,
-    line: true,
-  };
+  copyText(text: string, show: boolean) {
+    this.$copyText(text);
+    if (show) {
+      (this as any).$notification['success']({
+        message: '系统提示',
+        description: '代码已经复制到剪切板',
+      });
+    }
+  }
 
-  tsOptions = {
-    tabSize: 4,
-    theme: 'eclipse',
-    line: true,
-    lineNumbers: true,
-    matchBrackets: true,
-    mode: 'text/typescript',
-  };
+  handleCodeChange(nv: string) {
+    this.realJsonCode = nv;
+    this.genCode(this.desc, this.realJsonCode);
+  }
+
+  handleDescChange() {
+    this.genCode(this.desc, this.realJsonCode);
+  }
+
+  handleGenClick() {
+    this.genCode(this.desc, this.realJsonCode);
+    this.copyText(this.tsCode, false);
+    (this as any).$notification['success']({
+      message: '系统提示',
+      description: '代码已生成成功且复制到剪切板',
+    });
+  }
+
+  handleCopyJSON() {
+    console.log(this.realJsonCode);
+    this.copyText(this.realJsonCode, true);
+  }
+
+  handleCopyTs() {
+    console.log(this.tsCode);
+    this.copyText(this.tsCode, true);
+  }
+
+  handleCopyTsName() {
+    console.log(this.tsName);
+    this.copyText(this.tsName, true);
+  }
+
+  mounted() {
+    this.genCode(this.desc, this.realJsonCode);
+  }
 }
 </script>

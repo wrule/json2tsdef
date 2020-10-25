@@ -9,11 +9,14 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@types/codemirror": "^0.0.98",
     "@wrule/shuji": "^1.0.0",
     "ant-design-vue": "^1.6.5",
+    "codemirror": "^5.58.2",
     "core-js": "^3.6.5",
     "vue": "^2.6.11",
     "vue-class-component": "^7.2.3",
+    "vue-clipboard2": "^0.3.1",
     "vue-codemirror": "^4.0.6",
     "vue-property-decorator": "^8.4.2",
     "vue-router": "^3.2.0"
