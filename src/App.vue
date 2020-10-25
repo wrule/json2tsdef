@@ -2,6 +2,13 @@
   <div id="app">
     <div class="name">
       <h1 class="title">JSON转TypeScript类型定义</h1>
+      <a-tooltip placement="right">
+        <span slot="title">动态整合类型变化,合并类型等等</span>
+        <a target="_blank" href="https://github.com/wrule/shuji">
+          <a-icon class="githubicon" type="github" />
+          <span>Shuji的更多功能</span>
+        </a>
+      </a-tooltip>
     </div>
     <router-view/>
   </div>
@@ -30,7 +37,12 @@
 .name {
   padding: 20px;
 }
+
 .title {
   margin-bottom: 0px;
+}
+
+.githubicon {
+  margin-right: 5px;
 }
 </style>
