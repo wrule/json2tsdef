@@ -1660,10 +1660,10 @@
     "@webassemblyjs/wast-parser" "1.9.0"
     "@xtuc/long" "4.2.2"
 
-"@wrule/shuji@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@wrule/shuji/-/shuji-1.0.0.tgz#5b4da0ff42a8e225c4be2698823af1d0120c11df"
-  integrity sha512-KFJg1B+D9wKnKvvREFXCZGc6JYKtXjucBJ0Ql28sOr1y5RZ1H+7T90KsMyi7tI1pOQoKYfAGGMjmjLQ1Z2mJ6g==
+"@wrule/shuji@^1.0.3":
+  version "1.0.3"
+  resolved "http://npm.perfma-inc.net:80/@wrule%2fshuji/-/shuji-1.0.3.tgz#7c323664cc2ed5caab33f99d8926e33915adf898"
+  integrity sha512-L60W7GIlrUgvl2pDX7/GOIDiex2yY8SfSu60L5iHmmYQwII9FTg5XhiTL/fi3x9yiTGbvPdkthwtLNU1gr2b0A==
   dependencies:
     "@types/deasync" "^0.1.1"
     "@types/ioredis" "^4.17.5"

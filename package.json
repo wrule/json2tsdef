@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@types/codemirror": "^0.0.98",
-    "@wrule/shuji": "^1.0.0",
+    "@wrule/shuji": "^1.0.3",
     "ant-design-vue": "^1.6.5",
     "codemirror": "^5.58.2",
     "core-js": "^3.6.5",
